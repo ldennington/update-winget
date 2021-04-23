@@ -15,3 +15,15 @@ jobs:
           npm install
       - run: |
           npm run all
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update winget repository
+        uses: ./
+        with:
+          id: Microsoft.GitCredentialManagerCore
+          version: 2.0.194.40577
+          token: ${{ secrets.WINGET_TOKEN }}
+          manifestText: 'PackageIdentifier: Microsoft.GitCredentialManagerCore'
+          alwaysUsePullRequest: true
