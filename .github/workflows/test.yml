@@ -19,8 +19,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./
-        with:
+    - name: Update winget repository
+      uses: ./
+      with:
         id: Microsoft.GitCredentialManagerCore
         version: 2.0.194.40577
         token: ${{ secrets.WINGET_TOKEN }}
