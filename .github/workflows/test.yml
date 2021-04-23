@@ -8,18 +8,14 @@ on: # rebuild any PRs and main branch changes
       - ldennington/fix-winget-action
 
 jobs:
-  build: # make sure build/ci work properly
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: |
           npm install
       - run: |
-          npm run all
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+          npm run build
       - name: Update winget repository
         uses: ./
         with:
