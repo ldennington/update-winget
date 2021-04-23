@@ -19,9 +19,6 @@ function formatMessage(
 
 async function run(): Promise<void> {
   try {
-    throw new Error(
-      "experiment."
-    );
     const token = core.getInput('token');
     const gitHub = new GitHub(token);
 
