@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-// import { ManifestRepo } from './winget';
+import { ManifestRepo } from './winget';
 //import { Repository, Commit, PullRequest, ReleaseAsset } from './git';
 // import { Version } from './version';
 import { GitHub } from '@actions/github';
@@ -25,11 +25,11 @@ async function run(): Promise<void> {
 
     const repoStr = core.getInput('repo') || 'microsoft/winget-pkgs';
     const repoBranch = core.getInput('branch');
-    // const manifestRepo = await ManifestRepo.createAsync(
-    //   gitHub,
-    //   repoStr,
-    //   repoBranch
-    // );
+    const manifestRepo = await ManifestRepo.createAsync(
+      gitHub,
+      repoStr,
+      repoBranch
+    );
 
     const id = core.getInput('id', { required: true });
     const manifestText = core.getInput('manifestText', { required: true });
