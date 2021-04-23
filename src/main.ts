@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 // import { ManifestRepo } from './winget';
 //import { Repository, Commit, PullRequest, ReleaseAsset } from './git';
 // import { Version } from './version';
-// import { GitHub } from '@actions/github';
+import { GitHub } from '@actions/github';
 //import { computeSha256Async } from './hash';
 
 // function formatMessage(
@@ -19,9 +19,9 @@ import * as core from '@actions/core';
 
 async function run(): Promise<void> {
   try {
-    console.log('made it');
-    // const token = core.getInput('token');
-    // const gitHub = new GitHub(token);
+    const token = core.getInput('token');
+    console.log(`token: ${token}`);
+    const gitHub = new GitHub(token);
 
     const repoStr = core.getInput('repo') || 'microsoft/winget-pkgs';
     const repoBranch = core.getInput('branch');
