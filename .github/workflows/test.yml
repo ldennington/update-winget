@@ -26,3 +26,4 @@ jobs:
           token: ${{ secrets.WINGET_TOKEN }}
           manifestText: 'PackageIdentifier: Microsoft.GitCredentialManagerCore'
           alwaysUsePullRequest: true
+          releaseRepo: 'microsoft/Git-Credential-Manager-Core'
