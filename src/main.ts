@@ -43,23 +43,23 @@ async function run(): Promise<void> {
     const alwaysUsePullRequest =
       core.getInput('alwaysUsePullRequest') === 'true';
 
-    console.log(`repo=${repoStr}`);
-    console.log(`repoBranch=${repoBranch}`);
-    console.log(`id=${id}`);
-    console.log(`manifestText=${manifestText}`);
-    console.log(`version=${versionStr}`);
-    console.log(`sha256=${sha256}`);
-    console.log(`url=${url}`);
-    console.log(`message=${message}`);
-    console.log(`releaseRepo=${releaseRepo}`);
-    console.log(`releaseTag=${releaseTag}`);
-    console.log(`releaseAsset=${releaseAsset}`);
-    console.log(`alwaysUsePullRequest=${alwaysUsePullRequest}`);
+    core.debug(`repo=${repoStr}`);
+    core.debug(`repoBranch=${repoBranch}`);
+    core.debug(`id=${id}`);
+    core.debug(`manifestText=${manifestText}`);
+    core.debug(`version=${versionStr}`);
+    core.debug(`sha256=${sha256}`);
+    core.debug(`url=${url}`);
+    core.debug(`message=${message}`);
+    core.debug(`releaseRepo=${releaseRepo}`);
+    core.debug(`releaseTag=${releaseTag}`);
+    core.debug(`releaseAsset=${releaseAsset}`);
+    core.debug(`alwaysUsePullRequest=${alwaysUsePullRequest}`);
 
-    console.log(
+    core.debug(
       `process.env.GITHUB_REPOSITORY=${process.env.GITHUB_REPOSITORY}`
     );
-    console.log(`process.env.GITHUB_REF=${process.env.GITHUB_REF}`);
+    core.debug(`process.env.GITHUB_REF=${process.env.GITHUB_REF}`);
 
     if (!versionStr && !releaseAsset) {
       throw new Error(
@@ -77,9 +77,9 @@ async function run(): Promise<void> {
     let version: Version;
     let fullUrl: string;
 
-    console.log('locate asset if we need to compute either the version or url');
+    core.debug('locate asset if we need to compute either the version or url');
     if (!versionStr || !url) {
-      console.log(
+      core.debug(
         `locating release asset in repo '${releaseRepo}' @ '${releaseTag}'`
       );
       const repoName = Repository.splitRepoName(releaseRepo);
@@ -98,7 +98,7 @@ async function run(): Promise<void> {
       }
     }
 
-    console.log('locate asset if we need to compute either the version or url');
+    core.debug('locate asset if we need to compute either the version or url');
     if (versionStr) {
       version = new Version(versionStr);
     } else {
@@ -107,7 +107,7 @@ async function run(): Promise<void> {
         throw new Error('missing asset to compute version number from');
       }
 
-      console.log(
+      core.debug(
         `computing new manifest version number from asset in repo '${releaseRepo}' @ '${releaseTag}'`
       );
 
@@ -120,12 +120,12 @@ async function run(): Promise<void> {
       }
 
       if (matches.groups?.version) {
-        console.log(
+        core.debug(
           `using 'version' named capture group for new package version: ${matches.groups?.version}`
         );
         version = new Version(matches.groups.version);
       } else {
-        console.log(
+        core.debug(
           `using first capture group for new package version: ${matches[1]}`
         );
         version = new Version(matches[1]);
@@ -141,7 +141,7 @@ async function run(): Promise<void> {
         throw new Error('missing asset to compute URL from');
       }
 
-      console.log(
+      core.debug(
         `computing new manifest URL from asset in repo '${releaseRepo}' @ '${releaseTag}'`
       );
 
@@ -155,24 +155,24 @@ async function run(): Promise<void> {
         throw new Error('missing URL to compute checksum from');
       }
 
-      console.log(`computing SHA256 hash of data from asset at '${fullUrl}'...`);
+      core.debug(`computing SHA256 hash of data from asset at '${fullUrl}'...`);
 
       sha256 = await computeSha256Async(fullUrl);
-      console.log(`sha256=${sha256}`);
+      core.debug(`sha256=${sha256}`);
     }
 
-    console.log('generating manifest...');
+    core.debug('generating manifest...');
 
-    console.log('setting id...');
+    core.debug('setting id...');
     manifestText = manifestText.replace('{{id}}', id);
 
-    console.log('setting sha256...');
+    core.debug('setting sha256...');
     manifestText = manifestText.replace('{{sha256}}', sha256);
 
-    console.log('setting url...');
+    core.debug('setting url...');
     manifestText = manifestText.replace('{{url}}', fullUrl);
 
-    console.log('setting version...');
+    core.debug('setting version...');
     manifestText = manifestText.replace('{{version}}', version.toString());
     manifestText = manifestText.replace(
       '{{version.major}}',
@@ -187,19 +187,19 @@ async function run(): Promise<void> {
       version.toString(3)
     );
 
-    console.log('computing manifest file path...');
+    core.debug('computing manifest file path...');
     const manifestFilePath = `manifests/${id.replace(
       '.',
       '/'
     )}/${version}.yaml`;
-    console.log(`manifest file path is: ${manifestFilePath}`);
+    core.debug(`manifest file path is: ${manifestFilePath}`);
 
-    console.log(`final manifest is:`);
-    console.log(manifestText);
+    core.debug(`final manifest is:`);
+    core.debug(manifestText);
 
     const fullMessage = formatMessage(message, id, manifestFilePath, version);
 
-    console.log('publishing manifest...');
+    core.debug('publishing manifest...');
     const uploadOptions = {
       manifest: manifestText,
       filePath: manifestFilePath,
@@ -208,11 +208,11 @@ async function run(): Promise<void> {
     };
     const result = await manifestRepo.uploadManifestAsync(uploadOptions);
     if (result instanceof Commit) {
-      console.log(`Created commit '${result.sha}': ${result.url}`);
+      core.debug(`Created commit '${result.sha}': ${result.url}`);
     } else if (result instanceof PullRequest) {
-      console.log(`Created pull request '${result.id}': ${result.url}`);
+      core.debug(`Created pull request '${result.id}': ${result.url}`);
     } else {
-      console.log('unknown type of package update');
+      core.debug('unknown type of package update');
     }
   } catch (error) {
     core.setFailed(error.message);
