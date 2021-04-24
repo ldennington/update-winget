@@ -15,7 +15,7 @@ jobs:
         with:
           path: /winget-flow
       - name: Update winget repository
-        uses: ${{ GITHUB_WORKSPACE }}/winget-flow
+        uses: ${{ env.GITHUB_WORKSPACE }}/winget-flow
         with:
           id: Microsoft.GitCredentialManagerCore
           version: 2.0.194.40577
