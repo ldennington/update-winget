@@ -68,7 +68,7 @@ async function run(): Promise<void> {
     }
 
     if (versionStr && releaseAsset) {
-      core.warning(
+      core.error(
         "'version' parameter specified as well as 'releaseAsset' parameter; using 'version' parameter only"
       );
     }
