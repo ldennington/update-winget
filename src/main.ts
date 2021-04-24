@@ -98,7 +98,6 @@ async function run(): Promise<void> {
       }
     }
 
-    core.debug('locate asset if we need to compute either the version or url');
     if (versionStr) {
       version = new Version(versionStr);
     } else {
@@ -131,6 +130,9 @@ async function run(): Promise<void> {
         version = new Version(matches[1]);
       }
     }
+
+    core.debug(`asset: ${asset}`);
+    core.debug(`version: ${version}`);
 
     if (url) {
       // if we have an explicit url, format and use that
