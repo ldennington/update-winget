@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import { ManifestRepo } from './winget';
-//import { Repository, Commit, PullRequest, ReleaseAsset } from './git';
-// import { Version } from './version';
+import { Repository, Commit, PullRequest, ReleaseAsset } from './git';
+import { Version } from './version';
 import { GitHub } from '@actions/github';
 //import { computeSha256Async } from './hash';
 
@@ -20,7 +20,6 @@ import { GitHub } from '@actions/github';
 async function run(): Promise<void> {
   try {
     const token = core.getInput('token');
-    console.log(`token: ${token}`);
     const gitHub = new GitHub(token);
 
     const repoStr = core.getInput('repo') || 'microsoft/winget-pkgs';
@@ -62,21 +61,21 @@ async function run(): Promise<void> {
     );
     core.debug(`process.env.GITHUB_REF=${process.env.GITHUB_REF}`);
 
-    // if (!versionStr && !releaseAsset) {
-    //   throw new Error(
-    //     "must specify either the 'version' parameter OR 'releaseAsset' parameters."
-    //   );
-    // }
+    if (!versionStr && !releaseAsset) {
+      throw new Error(
+        "must specify either the 'version' parameter OR 'releaseAsset' parameters."
+      );
+    }
 
-    // if (versionStr && releaseAsset) {
-    //   core.warning(
-    //     "'version' parameter specified as well as 'releaseAsset' parameter; using 'version' parameter only"
-    //   );
-    // }
+    if (versionStr && releaseAsset) {
+      core.warning(
+        "'version' parameter specified as well as 'releaseAsset' parameter; using 'version' parameter only"
+      );
+    }
 
-    // let asset: ReleaseAsset | undefined;
-    // let version: Version;
-    // let fullUrl: string;
+    let asset: ReleaseAsset | undefined;
+    let version: Version;
+    let fullUrl: string;
 
     // // locate asset if we need to compute either the version or url
     // if (!versionStr || !url) {

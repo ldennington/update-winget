@@ -3624,8 +3624,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const winget_1 = __webpack_require__(918);
-//import { Repository, Commit, PullRequest, ReleaseAsset } from './git';
-// import { Version } from './version';
 const github_1 = __webpack_require__(469);
 //import { computeSha256Async } from './hash';
 // function formatMessage(
@@ -3643,7 +3641,6 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token');
-            console.log(`token: ${token}`);
             const gitHub = new github_1.GitHub(token);
             const repoStr = core.getInput('repo') || 'microsoft/winget-pkgs';
             const repoBranch = core.getInput('branch');
@@ -3672,19 +3669,15 @@ function run() {
             core.debug(`alwaysUsePullRequest=${alwaysUsePullRequest}`);
             core.debug(`process.env.GITHUB_REPOSITORY=${process.env.GITHUB_REPOSITORY}`);
             core.debug(`process.env.GITHUB_REF=${process.env.GITHUB_REF}`);
-            // if (!versionStr && !releaseAsset) {
-            //   throw new Error(
-            //     "must specify either the 'version' parameter OR 'releaseAsset' parameters."
-            //   );
-            // }
-            // if (versionStr && releaseAsset) {
-            //   core.warning(
-            //     "'version' parameter specified as well as 'releaseAsset' parameter; using 'version' parameter only"
-            //   );
-            // }
-            // let asset: ReleaseAsset | undefined;
-            // let version: Version;
-            // let fullUrl: string;
+            if (!versionStr && !releaseAsset) {
+                throw new Error("must specify either the 'version' parameter OR 'releaseAsset' parameters.");
+            }
+            if (versionStr && releaseAsset) {
+                core.warning("'version' parameter specified as well as 'releaseAsset' parameter; using 'version' parameter only");
+            }
+            let asset;
+            let version;
+            let fullUrl;
             // // locate asset if we need to compute either the version or url
             // if (!versionStr || !url) {
             //   core.debug(
