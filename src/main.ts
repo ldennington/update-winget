@@ -79,6 +79,15 @@ async function run(): Promise<void> {
 
     core.debug('locate asset if we need to compute either the version or url');
     core.debug('hello it me');
+    core.debug('hello it me');
+
+    core.debug('hello it me');
+
+    core.debug('hello it me');
+    core.debug('hello it me');
+    core.debug('hello it me');
+    core.debug('hello it me');
+
     if (!versionStr || !url) {
       core.debug(
         `locating release asset in repo '${releaseRepo}' @ '${releaseTag}'`
