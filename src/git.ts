@@ -1,4 +1,6 @@
 import { GitHub } from '@actions/github';
+import { countReset } from 'console';
+import * as core from '@actions/core';
 
 export class File {
   readonly path: string;
@@ -94,6 +96,9 @@ export class Repository {
       branchData.protected
     );
 
+    core.debug(
+      `Created new repo with owner: ${owner} name: ${name}, defaultBranch: ${defaultBranch}`
+    );
     return new Repository(
       api,
       owner,
