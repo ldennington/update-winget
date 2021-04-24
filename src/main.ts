@@ -77,7 +77,6 @@ async function run(): Promise<void> {
     let version: Version;
     let fullUrl: string;
 
-
     console.log('locate asset if we need to compute either the version or url');
     if (!versionStr || !url) {
       core.debug(
@@ -99,26 +98,26 @@ async function run(): Promise<void> {
       }
     }
 
-    // // if we have an explicit version string, format and use that
-    // if (versionStr) {
-    //   version = new Version(versionStr);
-    // } else {
-    //   // compute the version from the asset
-    //   if (!asset) {
-    //     throw new Error('missing asset to compute version number from');
-    //   }
+    console.log('locate asset if we need to compute either the version or url');
+    if (versionStr) {
+      version = new Version(versionStr);
+    } else {
+      // compute the version from the asset
+      if (!asset) {
+        throw new Error('missing asset to compute version number from');
+      }
 
-    //   core.debug(
-    //     `computing new manifest version number from asset in repo '${releaseRepo}' @ '${releaseTag}'`
-    //   );
+      core.debug(
+        `computing new manifest version number from asset in repo '${releaseRepo}' @ '${releaseTag}'`
+      );
 
-    //   const nameRegex = new RegExp(releaseAsset);
-    //   const matches = asset.name.match(nameRegex);
-    //   if (!matches || matches.length < 2) {
-    //     throw new Error(
-    //       `unable to match at least one capture group in asset name '${asset.name}' with regular expression '${nameRegex}'`
-    //     );
-    //   }
+      const nameRegex = new RegExp(releaseAsset);
+      const matches = asset.name.match(nameRegex);
+      if (!matches || matches.length < 2) {
+        throw new Error(
+          `unable to match at least one capture group in asset name '${asset.name}' with regular expression '${nameRegex}'`
+        );
+      }
 
     //   if (matches.groups?.version) {
     //     core.debug(
