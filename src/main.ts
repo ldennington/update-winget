@@ -208,11 +208,11 @@ async function run(): Promise<void> {
     };
     const result = await manifestRepo.uploadManifestAsync(uploadOptions);
     if (result instanceof Commit) {
-      core.info(`Created commit '${result.sha}': ${result.url}`);
+      console.log(`Created commit '${result.sha}': ${result.url}`);
     } else if (result instanceof PullRequest) {
-      core.info(`Created pull request '${result.id}': ${result.url}`);
+      console.log(`Created pull request '${result.id}': ${result.url}`);
     } else {
-      core.warning('unknown type of package update');
+      console.log('unknown type of package update');
     }
   } catch (error) {
     core.setFailed(error.message);
