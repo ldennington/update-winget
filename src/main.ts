@@ -3,19 +3,19 @@ import { ManifestRepo } from './winget';
 import { Repository, Commit, PullRequest, ReleaseAsset } from './git';
 import { Version } from './version';
 import { GitHub } from '@actions/github';
-//import { computeSha256Async } from './hash';
+import { computeSha256Async } from './hash';
 
-// function formatMessage(
-//   format: string,
-//   id: string,
-//   filePath: string,
-//   version: Version
-// ): string {
-//   return version
-//     .format(format)
-//     .replace(/{{id}}/g, id)
-//     .replace(/{{file}}/g, filePath);
-// }
+function formatMessage(
+  format: string,
+  id: string,
+  filePath: string,
+  version: Version
+): string {
+  return version
+    .format(format)
+    .replace(/{{id}}/g, id)
+    .replace(/{{file}}/g, filePath);
+}
 
 async function run(): Promise<void> {
   try {
@@ -31,9 +31,9 @@ async function run(): Promise<void> {
     );
 
     const id = core.getInput('id', { required: true });
-    const manifestText = core.getInput('manifestText', { required: true });
+    let manifestText = core.getInput('manifestText', { required: true });
     const versionStr = core.getInput('version');
-    const sha256 = core.getInput('sha256');
+    let sha256 = core.getInput('sha256');
     const url = core.getInput('url');
     const message = core.getInput('message');
     const releaseRepo =
@@ -132,88 +132,88 @@ async function run(): Promise<void> {
       }
     }
 
-    // if (url) {
-    //   // if we have an explicit url, format and use that
-    //   fullUrl = version.format(url);
-    // } else {
-    //   // use the download URL of the asset
-    //   if (!asset) {
-    //     throw new Error('missing asset to compute URL from');
-    //   }
+    if (url) {
+      // if we have an explicit url, format and use that
+      fullUrl = version.format(url);
+    } else {
+      // use the download URL of the asset
+      if (!asset) {
+        throw new Error('missing asset to compute URL from');
+      }
 
-    //   core.debug(
-    //     `computing new manifest URL from asset in repo '${releaseRepo}' @ '${releaseTag}'`
-    //   );
+      core.debug(
+        `computing new manifest URL from asset in repo '${releaseRepo}' @ '${releaseTag}'`
+      );
 
-    //   fullUrl = asset.downloadUrl;
-    // }
+      fullUrl = asset.downloadUrl;
+    }
 
-    // // if we have an explicit sha256 checksum, use that!
-    // // otherwise compute it from the download URL
-    // if (!sha256) {
-    //   if (!fullUrl) {
-    //     throw new Error('missing URL to compute checksum from');
-    //   }
+    // if we have an explicit sha256 checksum, use that!
+    // otherwise compute it from the download URL
+    if (!sha256) {
+      if (!fullUrl) {
+        throw new Error('missing URL to compute checksum from');
+      }
 
-    //   core.debug(`computing SHA256 hash of data from asset at '${fullUrl}'...`);
+      core.debug(`computing SHA256 hash of data from asset at '${fullUrl}'...`);
 
-    //   sha256 = await computeSha256Async(fullUrl);
-    //   core.debug(`sha256=${sha256}`);
-    // }
+      sha256 = await computeSha256Async(fullUrl);
+      core.debug(`sha256=${sha256}`);
+    }
 
-    // core.debug('generating manifest...');
+    core.debug('generating manifest...');
 
-    // core.debug('setting id...');
-    // manifestText = manifestText.replace('{{id}}', id);
+    core.debug('setting id...');
+    manifestText = manifestText.replace('{{id}}', id);
 
-    // core.debug('setting sha256...');
-    // manifestText = manifestText.replace('{{sha256}}', sha256);
+    core.debug('setting sha256...');
+    manifestText = manifestText.replace('{{sha256}}', sha256);
 
-    // core.debug('setting url...');
-    // manifestText = manifestText.replace('{{url}}', fullUrl);
+    core.debug('setting url...');
+    manifestText = manifestText.replace('{{url}}', fullUrl);
 
-    // core.debug('setting version...');
-    // manifestText = manifestText.replace('{{version}}', version.toString());
-    // manifestText = manifestText.replace(
-    //   '{{version.major}}',
-    //   version.toString(1)
-    // );
-    // manifestText = manifestText.replace(
-    //   '{{version.major_minor}}',
-    //   version.toString(2)
-    // );
-    // manifestText = manifestText.replace(
-    //   '{{version.major_minor_patch}}',
-    //   version.toString(3)
-    // );
+    core.debug('setting version...');
+    manifestText = manifestText.replace('{{version}}', version.toString());
+    manifestText = manifestText.replace(
+      '{{version.major}}',
+      version.toString(1)
+    );
+    manifestText = manifestText.replace(
+      '{{version.major_minor}}',
+      version.toString(2)
+    );
+    manifestText = manifestText.replace(
+      '{{version.major_minor_patch}}',
+      version.toString(3)
+    );
 
-    // core.debug('computing manifest file path...');
-    // const manifestFilePath = `manifests/${id.replace(
-    //   '.',
-    //   '/'
-    // )}/${version}.yaml`;
-    // core.debug(`manifest file path is: ${manifestFilePath}`);
+    core.debug('computing manifest file path...');
+    const manifestFilePath = `manifests/${id.replace(
+      '.',
+      '/'
+    )}/${version}.yaml`;
+    core.debug(`manifest file path is: ${manifestFilePath}`);
 
-    // core.debug(`final manifest is:`);
-    // core.debug(manifestText);
+    core.debug(`final manifest is:`);
+    core.debug(manifestText);
 
-    // const fullMessage = formatMessage(message, id, manifestFilePath, version);
+    const fullMessage = formatMessage(message, id, manifestFilePath, version);
 
-    // core.debug('publishing manifest...');
-    // const uploadOptions = {
-    //   manifest: manifestText,
-    //   filePath: manifestFilePath,
-    //   message: fullMessage,
-    //   alwaysUsePullRequest
-    // };
-    // const result = await manifestRepo.uploadManifestAsync(uploadOptions);
-    // if (result instanceof Commit) {
-    //   core.info(`Created commit '${result.sha}': ${result.url}`);
-    // } else if (result instanceof PullRequest) {
-    //   core.info(`Created pull request '${result.id}': ${result.url}`);
-    // } else {
-    //   core.warning('unknown type of package update');
-    // }
+    core.debug('publishing manifest...');
+    const uploadOptions = {
+      manifest: manifestText,
+      filePath: manifestFilePath,
+      message: fullMessage,
+      alwaysUsePullRequest
+    };
+    const result = await manifestRepo.uploadManifestAsync(uploadOptions);
+    if (result instanceof Commit) {
+      core.info(`Created commit '${result.sha}': ${result.url}`);
+    } else if (result instanceof PullRequest) {
+      core.info(`Created pull request '${result.id}': ${result.url}`);
+    } else {
+      core.warning('unknown type of package update');
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
