@@ -97,7 +97,7 @@ export class Repository {
     );
 
     core.debug(
-      `Created new repo with owner: ${owner} name: ${name}, defaultBranch: ${defaultBranch}`
+      `Created new repo with owner: ${owner} name: ${name}, defaultBranch: ${defaultBranch.name}`
     );
     return new Repository(
       api,
