@@ -43,7 +43,7 @@ async function run(): Promise<void> {
     const alwaysUsePullRequest =
       core.getInput('alwaysUsePullRequest') === 'true';
 
-    console.log('repo=${repoStr}');
+    console.log(`repo=${repoStr}`);
     console.log(`repoBranch=${repoBranch}`);
     console.log(`id=${id}`);
     console.log(`manifestText=${manifestText}`);
