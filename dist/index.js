@@ -17145,7 +17145,7 @@ class Repository {
             const { data: repoData } = yield api.repos.get(req);
             const { data: branchData } = yield api.repos.getBranch(Object.assign(Object.assign({}, req), { branch: repoData.default_branch }));
             const defaultBranch = new Branch(branchData.name, branchData.commit.sha, branchData.protected);
-            core.debug(`Created new repo with owner: ${owner} name: ${name}, defaultBranch: ${defaultBranch}`);
+            core.debug(`Created new repo with owner: ${owner} name: ${name}, defaultBranch: ${defaultBranch.name}`);
             return new Repository(api, owner, name, defaultBranch, repoData.permissions.push);
         });
     }
@@ -53541,7 +53541,7 @@ class ManifestRepo {
             }
             // Create the commit
             core.debug('creating commit...');
-            const commit = yield this.repo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message);
+            const commit = yield commitRepo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message);
             if (!createPull) {
                 return commit;
             }
