@@ -77,26 +77,27 @@ async function run(): Promise<void> {
     let version: Version;
     let fullUrl: string;
 
-    // // locate asset if we need to compute either the version or url
-    // if (!versionStr || !url) {
-    //   core.debug(
-    //     `locating release asset in repo '${releaseRepo}' @ '${releaseTag}'`
-    //   );
-    //   const repoName = Repository.splitRepoName(releaseRepo);
-    //   const sourceRepo = await Repository.createAsync(
-    //     gitHub,
-    //     repoName.owner,
-    //     repoName.repoName
-    //   );
-    //   const assets = await sourceRepo.getReleaseAssetsAsync(releaseTag);
-    //   const nameRegex = new RegExp(releaseAsset);
-    //   asset = assets.find(x => nameRegex.test(x.name));
-    //   if (!asset) {
-    //     throw new Error(
-    //       `unable to find an asset matching '${releaseAsset}' in repo '${releaseRepo}'`
-    //     );
-    //   }
-    // }
+
+    console.log('locate asset if we need to compute either the version or url');
+    if (!versionStr || !url) {
+      core.debug(
+        `locating release asset in repo '${releaseRepo}' @ '${releaseTag}'`
+      );
+      const repoName = Repository.splitRepoName(releaseRepo);
+      const sourceRepo = await Repository.createAsync(
+        gitHub,
+        repoName.owner,
+        repoName.repoName
+      );
+      const assets = await sourceRepo.getReleaseAssetsAsync(releaseTag);
+      const nameRegex = new RegExp(releaseAsset);
+      asset = assets.find(x => nameRegex.test(x.name));
+      if (!asset) {
+        throw new Error(
+          `unable to find an asset matching '${releaseAsset}' in repo '${releaseRepo}'`
+        );
+      }
+    }
 
     // // if we have an explicit version string, format and use that
     // if (versionStr) {
