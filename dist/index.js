@@ -3624,6 +3624,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const winget_1 = __webpack_require__(918);
+const git_1 = __webpack_require__(453);
+const version_1 = __webpack_require__(775);
 const github_1 = __webpack_require__(469);
 //import { computeSha256Async } from './hash';
 // function formatMessage(
@@ -3638,6 +3640,7 @@ const github_1 = __webpack_require__(469);
 //     .replace(/{{file}}/g, filePath);
 // }
 function run() {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token');
@@ -3678,56 +3681,42 @@ function run() {
             let asset;
             let version;
             let fullUrl;
-            // // locate asset if we need to compute either the version or url
-            // if (!versionStr || !url) {
-            //   core.debug(
-            //     `locating release asset in repo '${releaseRepo}' @ '${releaseTag}'`
-            //   );
-            //   const repoName = Repository.splitRepoName(releaseRepo);
-            //   const sourceRepo = await Repository.createAsync(
-            //     gitHub,
-            //     repoName.owner,
-            //     repoName.repoName
-            //   );
-            //   const assets = await sourceRepo.getReleaseAssetsAsync(releaseTag);
-            //   const nameRegex = new RegExp(releaseAsset);
-            //   asset = assets.find(x => nameRegex.test(x.name));
-            //   if (!asset) {
-            //     throw new Error(
-            //       `unable to find an asset matching '${releaseAsset}' in repo '${releaseRepo}'`
-            //     );
-            //   }
-            // }
-            // // if we have an explicit version string, format and use that
-            // if (versionStr) {
-            //   version = new Version(versionStr);
-            // } else {
-            //   // compute the version from the asset
-            //   if (!asset) {
-            //     throw new Error('missing asset to compute version number from');
-            //   }
-            //   core.debug(
-            //     `computing new manifest version number from asset in repo '${releaseRepo}' @ '${releaseTag}'`
-            //   );
-            //   const nameRegex = new RegExp(releaseAsset);
-            //   const matches = asset.name.match(nameRegex);
-            //   if (!matches || matches.length < 2) {
-            //     throw new Error(
-            //       `unable to match at least one capture group in asset name '${asset.name}' with regular expression '${nameRegex}'`
-            //     );
-            //   }
-            //   if (matches.groups?.version) {
-            //     core.debug(
-            //       `using 'version' named capture group for new package version: ${matches.groups?.version}`
-            //     );
-            //     version = new Version(matches.groups.version);
-            //   } else {
-            //     core.debug(
-            //       `using first capture group for new package version: ${matches[1]}`
-            //     );
-            //     version = new Version(matches[1]);
-            //   }
-            // }
+            console.log('locate asset if we need to compute either the version or url');
+            if (!versionStr || !url) {
+                core.debug(`locating release asset in repo '${releaseRepo}' @ '${releaseTag}'`);
+                const repoName = git_1.Repository.splitRepoName(releaseRepo);
+                const sourceRepo = yield git_1.Repository.createAsync(gitHub, repoName.owner, repoName.repoName);
+                const assets = yield sourceRepo.getReleaseAssetsAsync(releaseTag);
+                const nameRegex = new RegExp(releaseAsset);
+                asset = assets.find(x => nameRegex.test(x.name));
+                if (!asset) {
+                    throw new Error(`unable to find an asset matching '${releaseAsset}' in repo '${releaseRepo}'`);
+                }
+            }
+            console.log('locate asset if we need to compute either the version or url');
+            if (versionStr) {
+                version = new version_1.Version(versionStr);
+            }
+            else {
+                // compute the version from the asset
+                if (!asset) {
+                    throw new Error('missing asset to compute version number from');
+                }
+                core.debug(`computing new manifest version number from asset in repo '${releaseRepo}' @ '${releaseTag}'`);
+                const nameRegex = new RegExp(releaseAsset);
+                const matches = asset.name.match(nameRegex);
+                if (!matches || matches.length < 2) {
+                    throw new Error(`unable to match at least one capture group in asset name '${asset.name}' with regular expression '${nameRegex}'`);
+                }
+                if ((_a = matches.groups) === null || _a === void 0 ? void 0 : _a.version) {
+                    core.debug(`using 'version' named capture group for new package version: ${(_b = matches.groups) === null || _b === void 0 ? void 0 : _b.version}`);
+                    version = new version_1.Version(matches.groups.version);
+                }
+                else {
+                    core.debug(`using first capture group for new package version: ${matches[1]}`);
+                    version = new version_1.Version(matches[1]);
+                }
+            }
             // if (url) {
             //   // if we have an explicit url, format and use that
             //   fullUrl = version.format(url);
@@ -9482,6 +9471,59 @@ function getUserAgent() {
 
 exports.getUserAgent = getUserAgent;
 //# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 775:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Version = void 0;
+class Version {
+    constructor(version) {
+        this.version = version;
+        const regex = /^(\d+)(?:\.(\d+))?(?:\.(\d+))?/;
+        const matches = version.match(regex);
+        if (!matches) {
+            return;
+        }
+        if (matches.length > 1) {
+            this.major = matches[1];
+        }
+        if (matches.length > 2) {
+            this.minor = matches[2];
+        }
+        if (matches.length > 3) {
+            this.patch = matches[3];
+        }
+    }
+    toString(components) {
+        if (!components) {
+            return this.version;
+        }
+        if (components > 2 && this.patch) {
+            return `${this.major}.${this.minor}.${this.patch}`;
+        }
+        if (components > 1 && this.minor) {
+            return `${this.major}.${this.minor}`;
+        }
+        if (components > 0 && this.major) {
+            return this.major;
+        }
+        return this.version;
+    }
+    format(format) {
+        return format
+            .replace(/{{version}}/g, this.version)
+            .replace(/{{version.major}}/g, this.toString(1))
+            .replace(/{{version.major_minor}}/g, this.toString(2))
+            .replace(/{{version.major_minor_patch}}/g, this.toString(3));
+    }
+}
+exports.Version = Version;
 
 
 /***/ }),

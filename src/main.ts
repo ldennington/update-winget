@@ -119,18 +119,18 @@ async function run(): Promise<void> {
         );
       }
 
-    //   if (matches.groups?.version) {
-    //     core.debug(
-    //       `using 'version' named capture group for new package version: ${matches.groups?.version}`
-    //     );
-    //     version = new Version(matches.groups.version);
-    //   } else {
-    //     core.debug(
-    //       `using first capture group for new package version: ${matches[1]}`
-    //     );
-    //     version = new Version(matches[1]);
-    //   }
-    // }
+      if (matches.groups?.version) {
+        core.debug(
+          `using 'version' named capture group for new package version: ${matches.groups?.version}`
+        );
+        version = new Version(matches.groups.version);
+      } else {
+        core.debug(
+          `using first capture group for new package version: ${matches[1]}`
+        );
+        version = new Version(matches[1]);
+      }
+    }
 
     // if (url) {
     //   // if we have an explicit url, format and use that
