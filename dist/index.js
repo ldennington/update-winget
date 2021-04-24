@@ -8255,6 +8255,7 @@ function run() {
             const gitHub = new github_1.GitHub(token);
             const repoStr = core.getInput('repo') || 'microsoft/winget-pkgs';
             const repoBranch = core.getInput('branch');
+            core.debug(`creating manifest repo with name: ${repoStr} and branch: ${repoBranch}`);
             const manifestRepo = yield winget_1.ManifestRepo.createAsync(gitHub, repoStr, repoBranch);
             const id = core.getInput('id', { required: true });
             let manifestText = core.getInput('manifestText', { required: true });
@@ -8290,13 +8291,6 @@ function run() {
             let version;
             let fullUrl;
             core.debug('locate asset if we need to compute either the version or url');
-            core.debug('hello it me');
-            core.debug('hello it me');
-            core.debug('hello it me');
-            core.debug('hello it me');
-            core.debug('hello it me');
-            core.debug('hello it me');
-            core.debug('hello it me');
             if (!versionStr || !url) {
                 core.debug(`locating release asset in repo '${releaseRepo}' @ '${releaseTag}'`);
                 const repoName = git_1.Repository.splitRepoName(releaseRepo);

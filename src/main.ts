@@ -24,6 +24,9 @@ async function run(): Promise<void> {
 
     const repoStr = core.getInput('repo') || 'microsoft/winget-pkgs';
     const repoBranch = core.getInput('branch');
+    core.debug(
+      `creating manifest repo with name: ${repoStr} and branch: ${repoBranch}`
+    );
     const manifestRepo = await ManifestRepo.createAsync(
       gitHub,
       repoStr,
@@ -78,15 +81,6 @@ async function run(): Promise<void> {
     let fullUrl: string;
 
     core.debug('locate asset if we need to compute either the version or url');
-    core.debug('hello it me');
-    core.debug('hello it me');
-
-    core.debug('hello it me');
-
-    core.debug('hello it me');
-    core.debug('hello it me');
-    core.debug('hello it me');
-    core.debug('hello it me');
 
     if (!versionStr || !url) {
       core.debug(
