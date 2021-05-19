@@ -38,4 +38,3 @@ jobs:
           alwaysUsePullRequest: true
           releaseRepo: 'microsoft/Git-Credential-Manager-Core'
           releaseTag: 'v2.0.194-beta'
-          repo: ldennington/winget-playground
