@@ -40,9 +40,9 @@ export class ManifestRepo {
   async uploadManifestAsync(
     options: UploadManifestOptions
   ): Promise<Git.Commit | Git.PullRequest> {
-    let commitRepo: Git.Repository;
-    let commitBranch: Git.Branch;
-    let createPull: boolean;
+    // let commitRepo: Git.Repository;
+    // let commitBranch: Git.Branch;
+    // let createPull: boolean;
 
     core.debug(
       `canPush=${this.repo.canPush}, isProtected=${this.branch.isProtected}, alwaysUsePullRequest=${options.alwaysUsePullRequest}`
@@ -71,13 +71,16 @@ export class ManifestRepo {
     //   commitBranch = this.branch;
     //   createPull = false;
     // } else {
-      core.debug('updating via PR in fork repo');
-      // Need to update via PR from a fork
-      const fork = await this.repo.createForkAsync(options.forkOwner);
-      commitRepo = fork;
-      core.debug(this.repo.defaultBranch.name);
-      commitBranch = await commitRepo.createBranchAsync(`update-${Date.now().toString()}`, this.repo.defaultBranch.sha);
-      createPull = true;
+    core.debug('updating via PR in fork repo');
+    // Need to update via PR from a fork
+    const fork = await this.repo.createForkAsync(options.forkOwner);
+    const commitRepo = fork;
+    core.debug(this.repo.defaultBranch.name);
+    const commitBranch = await commitRepo.createBranchAsync(
+      `update-${Date.now().toString()}`,
+      this.repo.defaultBranch.sha
+    );
+    const createPull = true;
     // }
 
     // Create the commit
