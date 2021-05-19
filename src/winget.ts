@@ -75,7 +75,7 @@ export class ManifestRepo {
     // Need to update via PR from a fork
     const fork = await this.repo.createForkAsync(options.forkOwner);
     const commitRepo = fork;
-    core.debug(this.repo.defaultBranch.name);
+    core.debug(`sha: ${this.repo.defaultBranch.sha}`);
     const commitBranch = await commitRepo.createBranchAsync(
       `update-${Date.now().toString()}`,
       this.repo.defaultBranch.sha
