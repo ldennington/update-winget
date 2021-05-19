@@ -40,48 +40,46 @@ export class ManifestRepo {
   async uploadManifestAsync(
     options: UploadManifestOptions
   ): Promise<Git.Commit | Git.PullRequest> {
-    // let commitRepo: Git.Repository;
-    // let commitBranch: Git.Branch;
-    // let createPull: boolean;
+    let commitRepo: Git.Repository;
+    let commitBranch: Git.Branch;
+    let createPull: boolean;
 
     core.debug(
       `canPush=${this.repo.canPush}, isProtected=${this.branch.isProtected}, alwaysUsePullRequest=${options.alwaysUsePullRequest}`
     );
 
-    // if (
-    //   this.repo.canPush &&
-    //   (this.branch.isProtected || options.alwaysUsePullRequest)
-    // ) {
-    //   core.debug('updating via PR in repo');
-    //   // Need to update via a PR in this repo
-    //   commitRepo = this.repo;
-    //   commitBranch = await this.repo.createBranchAsync(
-    //     `update-${Date.now().toString()}`,
-    //     this.branch.sha
-    //   );
-    //   createPull = true;
-    // } else if (
-    //   this.repo.canPush &&
-    //   !this.branch.isProtected &&
-    //   !options.alwaysUsePullRequest
-    // ) {
-    //   core.debug('updating via commit in repo');
-    //   // Commit directly to the branch in this repo
-    //   commitRepo = this.repo;
-    //   commitBranch = this.branch;
-    //   createPull = false;
-    // } else {
-    core.debug('updating via PR in fork repo');
-    // Need to update via PR from a fork
-    const fork = await this.repo.createForkAsync(options.forkOwner);
-    const commitRepo = fork;
-    core.debug(`sha: ${this.repo.defaultBranch.sha}`);
-    const commitBranch = await commitRepo.createBranchAsync(
-      `update-${Date.now().toString()}`,
-      this.repo.defaultBranch.sha
-    );
-    const createPull = true;
-    // }
+    if (
+      this.repo.canPush &&
+      (this.branch.isProtected || options.alwaysUsePullRequest)
+    ) {
+      core.debug('updating via PR in repo');
+      // Need to update via a PR in this repo
+      commitRepo = this.repo;
+      commitBranch = await this.repo.createBranchAsync(
+        `update-${Date.now().toString()}`,
+        this.branch.sha
+      );
+      createPull = true;
+    } else if (
+      this.repo.canPush &&
+      !this.branch.isProtected &&
+      !options.alwaysUsePullRequest
+    ) {
+      core.debug('updating via commit in repo');
+      // Commit directly to the branch in this repo
+      commitRepo = this.repo;
+      commitBranch = this.branch;
+      createPull = false;
+    } else {
+      core.debug('updating via PR in fork repo');
+      // Need to update via PR from a fork
+      commitRepo = await this.repo.createForkAsync(options.forkOwner);
+      commitBranch = await commitRepo.createBranchAsync(
+        `update-${Date.now().toString()}`,
+        this.repo.defaultBranch.sha
+      );
+      createPull = true;
+    }
 
     // Create the commit
     core.debug('creating commit...');
