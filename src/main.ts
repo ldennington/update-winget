@@ -203,8 +203,7 @@ async function run(): Promise<void> {
       manifest: manifestText,
       filePath: manifestFilePath,
       message: fullMessage,
-      alwaysUsePullRequest,
-      version: version.toString()
+      alwaysUsePullRequest
     };
     const result = await manifestRepo.uploadManifestAsync(uploadOptions);
     if (result instanceof Commit) {

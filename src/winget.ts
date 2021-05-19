@@ -8,7 +8,6 @@ export interface UploadManifestOptions {
   message: string;
   forkOwner?: string;
   alwaysUsePullRequest: boolean;
-  version: string;
 }
 
 export class ManifestRepo {
@@ -76,7 +75,7 @@ export class ManifestRepo {
       // Need to update via PR from a fork
       const fork = await this.repo.createForkAsync(options.forkOwner);
       commitRepo = fork;
-      commitBranch = new Git.Branch(options.version, this.repo.defaultBranch.sha, false);
+      commitBranch = new Git.Branch(`update-${Date.now().toString()}`, this.repo.defaultBranch.sha, false);
       createPull = true;
     }
 
