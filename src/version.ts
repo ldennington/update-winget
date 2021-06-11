@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 
 export class Version {
-  readonly version: string;
+  version: string;
   readonly major: string | undefined;
   readonly minor: string | undefined;
   readonly patch: string | undefined;
@@ -57,7 +57,7 @@ export class Version {
   }
 
   removeChars(): void {
-    const digitsAndDots = /[0-9.]*/;
+    const digitsAndDots = /[.0-9]*/;
     const matches = this.version.match(digitsAndDots);
 
     core.debug(`Match count: ${matches?.length}`);

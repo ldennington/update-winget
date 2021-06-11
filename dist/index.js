@@ -31509,7 +31509,7 @@ class Version {
             .replace(/{{version.major_minor_patch}}/g, this.toString(3));
     }
     removeChars() {
-        const digitsAndDots = /[0-9.]*/;
+        const digitsAndDots = /[.0-9]*/;
         const matches = this.version.match(digitsAndDots);
         core.debug(`Match count: ${matches === null || matches === void 0 ? void 0 : matches.length}`);
         if (matches != null) {
