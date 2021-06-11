@@ -15,7 +15,7 @@ jobs:
         with:
           id: Microsoft.Git
           token: ${{ secrets.WINGET_TOKEN }}
-          repo: ldennington/winget-pkgs
+          repo: ldennington/winget-playground
           releaseAsset: Git-([0-9.vfs]*)\-64-bit.exe
           manifestText: |
             PackageIdentifier: {{id}}

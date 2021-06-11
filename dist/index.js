@@ -8355,6 +8355,10 @@ function run() {
             core.debug('setting url...');
             manifestText = manifestText.replace('{{url}}', fullUrl);
             core.debug('setting version...');
+            // winget requires we remove the 'vfs' characters from the microsoft/git manifest version to align with the version shown in Control Panel
+            if (`${process.env.GITHUB_REPOSITORY}` === 'microsoft/git') {
+                version.removeChars();
+            }
             manifestText = manifestText.replace('{{version}}', version.toString());
             manifestText = manifestText.replace('{{version.major}}', version.toString(1));
             manifestText = manifestText.replace('{{version.major_minor}}', version.toString(2));
@@ -31483,6 +31487,14 @@ class Version {
             .replace(/{{version.major}}/g, this.toString(1))
             .replace(/{{version.major_minor}}/g, this.toString(2))
             .replace(/{{version.major_minor_patch}}/g, this.toString(3));
+    }
+    removeChars() {
+        const digitsAndDots = /[^0-9.]/;
+        const matches = this.version.match(digitsAndDots);
+        if (matches != null) {
+            matches[1].replace('..', '.');
+            this.version === matches[1];
+        }
     }
 }
 exports.Version = Version;
