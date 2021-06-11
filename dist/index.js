@@ -31510,14 +31510,16 @@ class Version {
     }
     removeChars() {
         const digitsAndDots = /[.0-9]*/;
-        const matches = this.version.match(digitsAndDots);
-        core.debug(`Match count: ${matches === null || matches === void 0 ? void 0 : matches.length}`);
-        if (matches != null) {
-            matches[0].replace('..', '.');
-            this.version === matches[0];
-            core.debug(`matches[0]: ${matches[0]}`);
-            core.debug(`New version: ${this.version}`);
-        }
+        this.version.replace(digitsAndDots, '$1');
+        this.version.replace('..', '.');
+        core.debug(`New version: ${this.version}`);
+        // core.debug(`Match count: ${matches?.length}`);
+        // if (matches != null) {
+        //   matches[0].replace('..', '.');
+        //   this.version === matches[0];
+        //   core.debug(`matches[0]: ${matches[0]}`);
+        //   core.debug(`New version: ${this.version}`);
+        // }
     }
 }
 exports.Version = Version;
