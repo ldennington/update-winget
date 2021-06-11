@@ -1,3 +1,5 @@
+import * as core from '@actions/core';
+
 export class Version {
   readonly version: string;
   readonly major: string | undefined;
@@ -58,9 +60,12 @@ export class Version {
     const digitsAndDots = /[^0-9.]/;
     const matches = this.version.match(digitsAndDots);
 
+    core.debug(`Match count: ${matches?.length}`);
     if (matches != null) {
-      const newVersion = matches[0].replace('..', '.');
-      this.version === newVersion;
+      matches[0].replace('..', '.');
+      this.version === matches[0];
+      core.debug(`matches[0]: ${matches[0]}`);
+      core.debug(`New version: ${this.version}`);
     }
   }
 }
