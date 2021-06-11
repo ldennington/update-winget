@@ -60,7 +60,7 @@ export class Version {
 
     if (matches != null) {
       matches[0].replace('..', '.');
-      this.version === matches[1];
+      this.version === matches[0];
     }
   }
 }
