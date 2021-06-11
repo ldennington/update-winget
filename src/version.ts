@@ -59,8 +59,8 @@ export class Version {
     const matches = this.version.match(digitsAndDots);
 
     if (matches != null) {
-      matches[0].replace('..', '.');
-      this.version === matches[0];
+      const newVersion = matches[0].replace('..', '.');
+      this.version === newVersion;
     }
   }
 }

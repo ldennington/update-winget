@@ -31492,8 +31492,8 @@ class Version {
         const digitsAndDots = /[^0-9.]/;
         const matches = this.version.match(digitsAndDots);
         if (matches != null) {
-            matches[0].replace('..', '.');
-            this.version === matches[0];
+            const newVersion = matches[0].replace('..', '.');
+            this.version === newVersion;
         }
     }
 }
