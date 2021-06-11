@@ -174,7 +174,7 @@ async function run(): Promise<void> {
 
     core.debug('setting version...');
     // winget requires we remove the 'vfs' characters from the microsoft/git manifest version to align with the version shown in Control Panel
-    if (`${process.env.GITHUB_REPOSITORY}` === 'ldennington/git') {
+    if (`${process.env.GITHUB_REPOSITORY}` === 'ldennington/update-winget') {
       version.removeChars();
     }
     manifestText = manifestText.replace('{{version}}', version.toString());
