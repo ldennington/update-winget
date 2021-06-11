@@ -57,7 +57,7 @@ export class Version {
   }
 
   removeChars(): void {
-    const digitsAndDots = /[^0-9.]/;
+    const digitsAndDots = /[0-9.]*/;
     const matches = this.version.match(digitsAndDots);
 
     core.debug(`Match count: ${matches?.length}`);
