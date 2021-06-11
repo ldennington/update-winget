@@ -132,12 +132,7 @@ async function run(): Promise<void> {
         if (
           `${process.env.GITHUB_REPOSITORY}` === 'ldennington/update-winget'
         ) {
-          const digitsAndDots = /[.0-9]*/;
-          matches[1].replace('.vfs', '');
-          core.debug(`New version: ${matches[1]}`);
-          matches[1].replace(digitsAndDots, '$1');
-          matches[1].replace('..', '.');
-          core.debug(`New version: ${matches[1]}`);
+          matches[1] = matches[1].replace('.vfs', '');
         }
         version = new Version(matches[1]);
       }

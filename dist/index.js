@@ -8324,12 +8324,7 @@ function run() {
                     core.debug(`using first capture group for new package version: ${matches[1]}`);
                     // winget requires we remove the 'vfs' characters from the microsoft/git manifest version to align with the version shown in Control Panel
                     if (`${process.env.GITHUB_REPOSITORY}` === 'ldennington/update-winget') {
-                        const digitsAndDots = /[.0-9]*/;
-                        matches[1].replace('.vfs', '');
-                        core.debug(`New version: ${matches[1]}`);
-                        matches[1].replace(digitsAndDots, '$1');
-                        matches[1].replace('..', '.');
-                        core.debug(`New version: ${matches[1]}`);
+                        matches[1] = matches[1].replace('.vfs', '');
                     }
                     version = new version_1.Version(matches[1]);
                 }
