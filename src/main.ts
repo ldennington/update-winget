@@ -133,6 +133,8 @@ async function run(): Promise<void> {
           `${process.env.GITHUB_REPOSITORY}` === 'ldennington/update-winget'
         ) {
           const digitsAndDots = /[.0-9]*/;
+          const match = matches[1].match(digitsAndDots);
+          core.debug(`New version: ${match}`);
           matches[1].replace(digitsAndDots, '$1');
           matches[1].replace('..', '.');
           core.debug(`New version: ${matches[1]}`);
