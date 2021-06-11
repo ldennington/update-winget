@@ -3,15 +3,40 @@ on: # rebuild any PRs and main branch changes
   pull_request:
   push:
     branches:
-      - main
-      - 'releases/*'
+      - handle-microsoft-git-versioning
 
 jobs:
-  build: # make sure build/ci work properly
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          npm install
-      - run: |
-          npm run all
+      - name: Update winget repository
+        uses: ./
+        with:
+          id: Microsoft.Git
+          token: ${{ secrets.WINGET_TOKEN }}
+          repo: ldennington/winget-pkgs
+          releaseAsset: Git-([0-9.vfs]*)\-64-bit.exe
+          manifestText: |
+            PackageIdentifier: {{id}}
+            PackageVersion: {{version}}
+            PackageName: Microsoft Git
+            Publisher: The Git Development Community
+            Moniker: microsoft-git
+            PackageUrl: https://aka.ms/gcmcore
+            License: Copyright (C) Microsoft Corporation
+            ShortDescription: |
+            Git distribution to support monorepo scenarios.
+            Note: This is not Git for Windows. Unless you are working in a monorepo and require
+            specific Git modifications, please run `winget install git` to start using Git for Windows.
+            Installers:
+            - Architecture: x64
+              InstallerUrl: {{url}}
+              InstallerType: inno
+              InstallerSha256: {{sha256}}
+            PackageLocale: en-US
+            ManifestType: singleton
+            ManifestVersion: 1.0.0
+          alwaysUsePullRequest: true
+          releaseRepo: 'microsoft/git'
+          releaseTag: 'v2.32.0.vfs.0.1'

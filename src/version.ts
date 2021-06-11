@@ -53,4 +53,14 @@ export class Version {
       .replace(/{{version.major_minor}}/g, this.toString(2))
       .replace(/{{version.major_minor_patch}}/g, this.toString(3));
   }
+
+  removeChars(): void {
+    const digitsAndDots = /[^0-9.]/;
+    const matches = this.version.match(digitsAndDots);
+
+    if (matches != null) {
+      matches[1].replace("..", ".");
+      this.version == matches[1];
+    }
+  }
 }
