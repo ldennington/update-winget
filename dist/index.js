@@ -8322,6 +8322,13 @@ function run() {
                 }
                 else {
                     core.debug(`using first capture group for new package version: ${matches[1]}`);
+                    // winget requires we remove the 'vfs' characters from the microsoft/git manifest version to align with the version shown in Control Panel
+                    if (`${process.env.GITHUB_REPOSITORY}` === 'ldennington/update-winget') {
+                        const digitsAndDots = /[.0-9]*/;
+                        matches[1].replace(digitsAndDots, '$1');
+                        matches[1].replace('..', '.');
+                        core.debug(`New version: ${matches[1]}`);
+                    }
                     version = new version_1.Version(matches[1]);
                 }
             }
@@ -8355,10 +8362,6 @@ function run() {
             core.debug('setting url...');
             manifestText = manifestText.replace('{{url}}', fullUrl);
             core.debug('setting version...');
-            // winget requires we remove the 'vfs' characters from the microsoft/git manifest version to align with the version shown in Control Panel
-            if (`${process.env.GITHUB_REPOSITORY}` === 'ldennington/update-winget') {
-                version.removeChars();
-            }
             manifestText = manifestText.replace('{{version}}', version.toString());
             manifestText = manifestText.replace('{{version.major}}', version.toString(1));
             manifestText = manifestText.replace('{{version.major_minor}}', version.toString(2));
@@ -31442,32 +31445,12 @@ module.exports = function generate__limitLength(it, $keyword, $ruleType) {
 /* 773 */,
 /* 774 */,
 /* 775 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ (function(__unusedmodule, exports) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Version = void 0;
-const core = __importStar(__webpack_require__(470));
 class Version {
     constructor(version) {
         this.version = version;
@@ -31507,19 +31490,6 @@ class Version {
             .replace(/{{version.major}}/g, this.toString(1))
             .replace(/{{version.major_minor}}/g, this.toString(2))
             .replace(/{{version.major_minor_patch}}/g, this.toString(3));
-    }
-    removeChars() {
-        const digitsAndDots = /[.0-9]*/;
-        this.version.replace(digitsAndDots, '$1');
-        this.version.replace('..', '.');
-        core.debug(`New version: ${this.version}`);
-        // core.debug(`Match count: ${matches?.length}`);
-        // if (matches != null) {
-        //   matches[0].replace('..', '.');
-        //   this.version === matches[0];
-        //   core.debug(`matches[0]: ${matches[0]}`);
-        //   core.debug(`New version: ${this.version}`);
-        // }
     }
 }
 exports.Version = Version;

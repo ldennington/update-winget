@@ -1,7 +1,5 @@
-import * as core from '@actions/core';
-
 export class Version {
-  version: string;
+  readonly version: string;
   readonly major: string | undefined;
   readonly minor: string | undefined;
   readonly patch: string | undefined;
@@ -54,20 +52,5 @@ export class Version {
       .replace(/{{version.major}}/g, this.toString(1))
       .replace(/{{version.major_minor}}/g, this.toString(2))
       .replace(/{{version.major_minor_patch}}/g, this.toString(3));
-  }
-
-  removeChars(): void {
-    const digitsAndDots = /[.0-9]*/;
-    this.version.replace(digitsAndDots, '$1');
-    this.version.replace('..', '.');
-    core.debug(`New version: ${this.version}`);
-
-    // core.debug(`Match count: ${matches?.length}`);
-    // if (matches != null) {
-    //   matches[0].replace('..', '.');
-    //   this.version === matches[0];
-    //   core.debug(`matches[0]: ${matches[0]}`);
-    //   core.debug(`New version: ${this.version}`);
-    // }
   }
 }
