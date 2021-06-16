@@ -8361,7 +8361,8 @@ function run() {
             manifestText = formatManifest(manifestText, id, sha256, fullUrl, version);
             core.debug('final manifest is:');
             core.debug(manifestText);
-            const versionRegEx = '{{version:.*}}';
+            const versionRegEx = /{{version:.+}}/g;
+            ;
             const testPathVersion = (_c = manifestText.match(versionRegEx)) === null || _c === void 0 ? void 0 : _c.shift();
             core.debug(`Path version: ${testPathVersion}`);
             const pathVersion = (_e = (_d = manifestText.match(versionRegEx)) === null || _d === void 0 ? void 0 : _d.shift()) !== null && _e !== void 0 ? _e : version.toString();
