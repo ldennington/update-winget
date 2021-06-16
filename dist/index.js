@@ -8258,7 +8258,7 @@ function formatManifest(format, id, sha256, url, version) {
         .replace(/{{url}}/g, url);
 }
 function run() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token');
@@ -8361,8 +8361,10 @@ function run() {
             manifestText = formatManifest(manifestText, id, sha256, fullUrl, version);
             core.debug('final manifest is:');
             core.debug(manifestText);
-            const versionRegEx = '{{version:*}}';
-            const pathVersion = (_d = (_c = manifestText.match(versionRegEx)) === null || _c === void 0 ? void 0 : _c.shift()) !== null && _d !== void 0 ? _d : version.toString();
+            const versionRegEx = '{{version:.*}}';
+            const testPathVersion = (_c = manifestText.match(versionRegEx)) === null || _c === void 0 ? void 0 : _c.shift();
+            core.debug(`Path version: ${testPathVersion}`);
+            const pathVersion = (_e = (_d = manifestText.match(versionRegEx)) === null || _d === void 0 ? void 0 : _d.shift()) !== null && _e !== void 0 ? _e : version.toString();
             core.debug('computing manifest file path...');
             const manifestFilePath = `manifests/${id
                 .charAt(0)
