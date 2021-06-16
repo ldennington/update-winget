@@ -184,7 +184,9 @@ async function run(): Promise<void> {
     core.debug('final manifest is:');
     core.debug(manifestText);
 
-    const versionRegEx = '{{version:*}}';
+    const versionRegEx = '{{version:.*}}';
+    const testPathVersion = manifestText.match(versionRegEx)?.shift();
+    core.debug(`Path version: ${testPathVersion}`);
     const pathVersion =
       manifestText.match(versionRegEx)?.shift() ?? version.toString();
 
