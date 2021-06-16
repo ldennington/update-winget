@@ -184,11 +184,15 @@ async function run(): Promise<void> {
     core.debug('final manifest is:');
     core.debug(manifestText);
 
+    const versionRegEx = '{{version:*}}';
+    const pathVersion =
+      manifestText.match(versionRegEx)?.shift() ?? version.toString();
+
     core.debug('computing manifest file path...');
     const manifestFilePath = `manifests/${id
       .charAt(0)
       .toLowerCase()}/${id.replace('.', '/')}/${version.format(
-      versionStr
+      pathVersion
     )}/${id}.yaml`.trim();
     core.debug(`manifest file path is: ${manifestFilePath}`);
 
