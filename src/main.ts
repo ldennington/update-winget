@@ -180,7 +180,7 @@ async function run(): Promise<void> {
     }
 
     core.debug('generating manifest...');
-    manifestText = formatManifest(manifestText, id, sha256, url, version);
+    manifestText = formatManifest(manifestText, id, sha256, fullUrl, version);
     core.debug('final manifest is:');
     core.debug(manifestText);
 

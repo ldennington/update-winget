@@ -8358,7 +8358,7 @@ function run() {
                 core.debug(`sha256=${sha256}`);
             }
             core.debug('generating manifest...');
-            manifestText = formatManifest(manifestText, id, sha256, url, version);
+            manifestText = formatManifest(manifestText, id, sha256, fullUrl, version);
             core.debug('final manifest is:');
             core.debug(manifestText);
             core.debug('computing manifest file path...');
