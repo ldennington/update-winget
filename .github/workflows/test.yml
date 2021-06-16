@@ -9,13 +9,13 @@ jobs:
       - name: Update winget repository
         uses: ./
         with:
-          id: Microsoft.GiT
+          id: Microsoft.Git
           token: ${{ secrets.WINGET_TOKEN }}
-          version: {{version:s/\.[A-Za-z]+\./\./}}
           releaseAsset: Git-([0-9.vfs]*)\-64-bit.exe
           releaseRepo: microsoft/git
           repo: ldennington/winget-playground
           releaseTag: v2.32.0.vfs.0.0
+          versionRegex: '{{version:s/\.[A-Za-z]+\./\./}}'
           manifestText: |
             PackageIdentifier: {{id}}
             PackageVersion: {{version}}
