@@ -9,6 +9,10 @@ inputs:
     description: |
       Manifest version. Required if 'releaseRepo', 'releaseTag', and 'releaseAsset' are not specified.
     required: false
+  versionRegex:
+    description: |
+      Regex to search/replace in version strings
+    required: false
   manifestText:
     description: |
       Manifest content. The following replacements will be made:

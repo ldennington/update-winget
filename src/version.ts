@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
 
 export class Version {
-  readonly version: string;
-  readonly components: string[];
+  version: string;
+  components: string[];
 
   constructor(version: string) {
     this.version = version;
@@ -61,10 +61,14 @@ export class Version {
 
     // Replace legacy format specifiers
     core.debug('Replacing legacy version specifiers');
-    return result
+    result
       .replace(/{{version}}/g, this.version)
       .replace(/{{version\.major}}/g, this.toString(1))
       .replace(/{{version\.major_minor}}/g, this.toString(2))
       .replace(/{{version\.major_minor_patch}}/g, this.toString(3));
+
+    this.version = result;
+    this.components = this.version.split('.');
+    return result;
   }
 }

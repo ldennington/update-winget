@@ -10,7 +10,7 @@ jobs:
         uses: ./
         with:
           id: Microsoft.Git
-          version: version:s/\.[A-Za-z]+\./\./
+          versionRegex: '{{version:s/\.[A-Za-z]+\./\./}}'
           token: ${{ secrets.WINGET_TOKEN }}
           releaseAsset: Git-([0-9.vfs]*)\-64-bit.exe
           releaseRepo: microsoft/git
