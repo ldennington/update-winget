@@ -8259,7 +8259,7 @@ function run() {
             const id = core.getInput('id', { required: true });
             let manifestText = core.getInput('manifestText', { required: true });
             const versionStr = core.getInput('version');
-            const versionRegEx = core.getInput('versionRegex');
+            // const versionRegEx = core.getInput('versionRegex');
             let sha256 = core.getInput('sha256');
             const url = core.getInput('url');
             const message = core.getInput('message');
@@ -8272,7 +8272,7 @@ function run() {
             core.debug(`id=${id}`);
             core.debug(`manifestText=${manifestText}`);
             core.debug(`version=${versionStr}`);
-            core.debug(`versionRegEx=${versionRegEx}`);
+            // core.debug(`versionRegEx=${versionRegEx}`);
             core.debug(`sha256=${sha256}`);
             core.debug(`url=${url}`);
             core.debug(`message=${message}`);
@@ -8327,9 +8327,9 @@ function run() {
                     version = new version_1.Version(matches[1]);
                 }
             }
-            if (versionRegEx) {
-                version.format(versionRegEx);
-            }
+            // if (versionRegEx) {
+            //   version.format(versionRegEx);
+            // }
             if (url) {
                 // if we have an explicit url, format and use that
                 fullUrl = version.format(url);
