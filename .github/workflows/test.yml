@@ -18,7 +18,7 @@ jobs:
           releaseTag: v2.32.0.vfs.0.0
           manifestText: |
             PackageIdentifier: {{id}}
-            PackageVersion: {{version:s/\.[A-Za-z]+\./\./}}
+            PackageVersion: {{version:s/\.[A-Za-z]+\././}}
             PackageName: Microsoft Git
             Publisher: The Git Development Community
             Moniker: microsoft-git
