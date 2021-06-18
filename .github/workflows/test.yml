@@ -9,7 +9,6 @@ jobs:
       - id: update-winget
         name: Update winget repository
         uses: mjcheetham/update-winget@v1.3.2
-
         with:
           id: Microsoft.Git
           token: ${{ secrets.WINGET_TOKEN }}
@@ -38,4 +37,4 @@ jobs:
             PackageLocale: en-US
             ManifestType: singleton
             ManifestVersion: 1.0.0
-        alwaysUsePullRequest: true
+          alwaysUsePullRequest: true
