@@ -8366,6 +8366,7 @@ function run() {
             const pkgVerMatch = manifestText.match(pkgVerRegEx);
             let pathVersion;
             if ((_c = pkgVerMatch === null || pkgVerMatch === void 0 ? void 0 : pkgVerMatch.groups) === null || _c === void 0 ? void 0 : _c.version) {
+                core.debug(`Path version: ${pathVersion}`);
                 pathVersion = pkgVerMatch.groups.version;
             }
             else {

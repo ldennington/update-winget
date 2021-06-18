@@ -190,7 +190,9 @@ async function run(): Promise<void> {
     const pkgVerRegEx = /PackageVersion:\s*(?<version>.*)/;
     const pkgVerMatch = manifestText.match(pkgVerRegEx);
     let pathVersion: string | undefined;
+
     if (pkgVerMatch?.groups?.version) {
+      core.debug(`Path version: ${pathVersion}`);
       pathVersion = pkgVerMatch.groups.version;
     } else {
       core.warning(

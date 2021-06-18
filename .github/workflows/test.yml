@@ -10,15 +10,13 @@ jobs:
         uses: ./
         with:
           id: Microsoft.Git
-          versionRegex: '{{version:s/\.[A-Za-z]+\./\./}}'
           token: ${{ secrets.WINGET_TOKEN }}
           releaseAsset: Git-([0-9.vfs]*)\-64-bit.exe
           releaseRepo: microsoft/git
           repo: ldennington/winget-playground
-          releaseTag: v2.32.0.vfs.0.0
           manifestText: |
             PackageIdentifier: {{id}}
-            PackageVersion: {{version}}
+            PackageVersion: {{version:s/\.[A-Za-z]+\./\./}}
             PackageName: Microsoft Git
             Publisher: The Git Development Community
             Moniker: microsoft-git
