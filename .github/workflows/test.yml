@@ -9,10 +9,14 @@ jobs:
       - id: update-winget
         name: Update winget repository
         uses: mjcheetham/update-winget@v1.3.2
+
         with:
           id: Microsoft.Git
           token: ${{ secrets.WINGET_TOKEN }}
           releaseAsset: Git-([0-9.vfs]*)\-64-bit.exe
+          releaseRepo: microsoft/git
+          repo: ldennington/winget-playground
+          releaseTag: v2.32.0.vfs.0.0
           manifestText: |
             PackageIdentifier: {{id}}
             PackageVersion: {{version:s/\.[A-Za-z]+\././}}
