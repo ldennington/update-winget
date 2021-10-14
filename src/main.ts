@@ -13,12 +13,13 @@ function formatMessage(
   format: string,
   id: string,
   filePath: string,
-  version: Version
+  version: Version,
+  comment: string
 ): string {
-  return version
+  return `${version
     .format(format)
     .replace(/{{id}}/g, id)
-    .replace(/{{file}}/g, filePath);
+    .replace(/{{file}}/g, filePath)}\n${comment}`;
 }
 
 function formatManifest(
@@ -184,21 +185,21 @@ async function run(): Promise<void> {
     core.debug('final manifest is:');
     core.debug(manifestText);
 
-core.debug(
-  "computing file path version from final manifest property 'PackageVersion'..."
-);
-const pkgVerRegEx = /PackageVersion:\s*(?<version>.*)/;
-const pkgVerMatch = manifestText.match(pkgVerRegEx);
-let pathVersion: string | undefined;
-if (pkgVerMatch?.groups?.version) {
-  pathVersion = pkgVerMatch.groups.version;
-} else {
-  core.warning(
-    "could not match 'PackageVersion' property in manifest; manifest may not be valid!"
-  );
-  pathVersion = version.toString();
-}
-core.debug(`path version is ${pathVersion}`);
+    core.debug(
+      "computing file path version from final manifest property 'PackageVersion'..."
+    );
+    const pkgVerRegEx = /PackageVersion:\s*(?<version>.*)/;
+    const pkgVerMatch = manifestText.match(pkgVerRegEx);
+    let pathVersion: string | undefined;
+    if (pkgVerMatch?.groups?.version) {
+      pathVersion = pkgVerMatch.groups.version;
+    } else {
+      core.warning(
+        "could not match 'PackageVersion' property in manifest; manifest may not be valid!"
+      );
+      pathVersion = version.toString();
+    }
+    core.debug(`path version is ${pathVersion}`);
 
     core.debug('computing manifest file path...');
     const manifestFilePath = `manifests/${id
@@ -206,8 +207,17 @@ core.debug(`path version is ${pathVersion}`);
       .toLowerCase()}/${id.replace('.', '/')}/${pathVersion}/${id}.yaml`.trim();
     core.debug(`manifest file path is: ${manifestFilePath}`);
 
+    const comment = `Creating manifest for new release of ${id} (version ${version})`;
+    core.debug(`PR comment is: ${comment}`);
+
     core.debug('generating message...');
-    const fullMessage = formatMessage(message, id, manifestFilePath, version);
+    const fullMessage = formatMessage(
+      message,
+      id,
+      manifestFilePath,
+      version,
+      comment
+    );
     core.debug('final message is:');
     core.debug(fullMessage);
 
