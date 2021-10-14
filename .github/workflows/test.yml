@@ -1,17 +1,38 @@
 name: 'build-test'
 on: # rebuild any PRs and main branch changes
-  pull_request:
   push:
     branches:
-      - main
-      - 'releases/*'
+      - testing
 
 jobs:
-  build: # make sure build/ci work properly
+  test: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          npm install
-      - run: |
-          npm run all
+      - name: Update winget repository
+        uses: ./
+        with:
+          id: Microsoft.GitCredentialManagerCore
+          version: 2.0.567
+          token: ${{ secrets.WINGET_TOKEN }}
+          repo: ldennington/winget-playground
+          manifestText: |
+            PackageVersion: 2.0.567
+            PackageName: Microsoft Git Credential Manager Core
+            Publisher: Microsoft
+            Moniker: microsoft-git-credential-manager-core
+            PackageUrl: https://aka.ms/gcmcore
+            License: Copyright (C) Microsoft Corporation
+            ShortDescription: |
+              Git Credential Manager Core Setup
+            Installers:
+            - Architecture: x64
+              InstallerUrl: https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/v2.0.567/gcmcoreuser-win-x86-2.0.567.18224.exe
+              InstallerType: inno
+              InstallerSha256: 1985df0ac94deb0c26ba0e570055caed128c9baabc4c664b9ce822f8c10caa03
+            PackageLocale: en-US
+            ManifestType: singleton
+            ManifestVersion: 1.0.0
+          alwaysUsePullRequest: true
+          releaseRepo: 'microsoft/Git-Credential-Manager-Core'
+          releaseTag: 'v2.0.567'
