@@ -8244,11 +8244,19 @@ const hash_1 = __webpack_require__(652);
 function formatUrl(format, version) {
     return version.format(format);
 }
+<<<<<<< HEAD
 function formatMessage(format, id, filePath, version, comment) {
     return `${version
         .format(format)
         .replace(/{{id}}/g, id)
         .replace(/{{file}}/g, filePath)}\n${comment}`;
+=======
+function formatMessage(format, id, filePath, version) {
+    return version
+        .format(format)
+        .replace(/{{id}}/g, id)
+        .replace(/{{file}}/g, filePath);
+>>>>>>> 2dec41f (Allow updates to existing winget manifests)
 }
 function formatManifest(format, id, sha256, url, version) {
     return version
@@ -8378,10 +8386,15 @@ function run() {
                 .charAt(0)
                 .toLowerCase()}/${id.replace('.', '/')}/${pathVersion}/${id}.yaml`.trim();
             core.debug(`manifest file path is: ${manifestFilePath}`);
+<<<<<<< HEAD
             const comment = `Creating manifest for new release of ${id} (version ${version})`;
             core.debug(`PR comment is: ${comment}`);
             core.debug('generating message...');
             const fullMessage = formatMessage(message, id, manifestFilePath, version, comment);
+=======
+            core.debug('generating message...');
+            const fullMessage = formatMessage(message, id, manifestFilePath, version);
+>>>>>>> 2dec41f (Allow updates to existing winget manifests)
             core.debug('final message is:');
             core.debug(fullMessage);
             core.debug('publishing manifest...');
@@ -53485,6 +53498,9 @@ exports.requestLog = requestLog;
 
 "use strict";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2dec41f (Allow updates to existing winget manifests)
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -53565,9 +53581,25 @@ class ManifestRepo {
                 commitBranch = yield commitRepo.createBranchAsync(`update-${Date.now().toString()}`, this.repo.defaultBranch.sha);
                 createPull = true;
             }
+<<<<<<< HEAD
             // Create the commit
             core.debug('creating commit...');
             const commit = yield commitRepo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message);
+=======
+            let commit;
+            // Create the commit
+            core.debug('creating commit...');
+            try {
+                core.debug('checking if file exists...');
+                const existingSha = (yield commitRepo.getFileAsync(options.filePath, commitRepo.defaultBranch.name)).blob;
+                core.debug('file exists, updating...');
+                commit = yield commitRepo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message, existingSha);
+            }
+            catch (_a) {
+                core.debug('file does not exist, creating...');
+                commit = yield commitRepo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message);
+            }
+>>>>>>> 2dec41f (Allow updates to existing winget manifests)
             if (!createPull) {
                 return commit;
             }
@@ -53594,6 +53626,7 @@ class ManifestRepo {
     }
 }
 exports.ManifestRepo = ManifestRepo;
+<<<<<<< HEAD
 =======
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -53705,6 +53738,8 @@ class ManifestRepo {
 }
 exports.ManifestRepo = ManifestRepo;
 >>>>>>> 2891a38 (Create/commit to new branch in forks)
+=======
+>>>>>>> 2dec41f (Allow updates to existing winget manifests)
 
 
 /***/ }),
