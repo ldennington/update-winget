@@ -8244,19 +8244,11 @@ const hash_1 = __webpack_require__(652);
 function formatUrl(format, version) {
     return version.format(format);
 }
-<<<<<<< HEAD
 function formatMessage(format, id, filePath, version, comment) {
     return `${version
         .format(format)
         .replace(/{{id}}/g, id)
         .replace(/{{file}}/g, filePath)}\n${comment}`;
-=======
-function formatMessage(format, id, filePath, version) {
-    return version
-        .format(format)
-        .replace(/{{id}}/g, id)
-        .replace(/{{file}}/g, filePath);
->>>>>>> 2dec41f (Allow updates to existing winget manifests)
 }
 function formatManifest(format, id, sha256, url, version) {
     return version
@@ -8386,15 +8378,10 @@ function run() {
                 .charAt(0)
                 .toLowerCase()}/${id.replace('.', '/')}/${pathVersion}/${id}.yaml`.trim();
             core.debug(`manifest file path is: ${manifestFilePath}`);
-<<<<<<< HEAD
             const comment = `Creating manifest for new release of ${id} (version ${version})`;
             core.debug(`PR comment is: ${comment}`);
             core.debug('generating message...');
             const fullMessage = formatMessage(message, id, manifestFilePath, version, comment);
-=======
-            core.debug('generating message...');
-            const fullMessage = formatMessage(message, id, manifestFilePath, version);
->>>>>>> 2dec41f (Allow updates to existing winget manifests)
             core.debug('final message is:');
             core.debug(fullMessage);
             core.debug('publishing manifest...');
@@ -53497,10 +53484,6 @@ exports.requestLog = requestLog;
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2dec41f (Allow updates to existing winget manifests)
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -53581,11 +53564,6 @@ class ManifestRepo {
                 commitBranch = yield commitRepo.createBranchAsync(`update-${Date.now().toString()}`, this.repo.defaultBranch.sha);
                 createPull = true;
             }
-<<<<<<< HEAD
-            // Create the commit
-            core.debug('creating commit...');
-            const commit = yield commitRepo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message);
-=======
             let commit;
             // Create the commit
             core.debug('creating commit...');
@@ -53599,7 +53577,6 @@ class ManifestRepo {
                 core.debug('file does not exist, creating...');
                 commit = yield commitRepo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message);
             }
->>>>>>> 2dec41f (Allow updates to existing winget manifests)
             if (!createPull) {
                 return commit;
             }
@@ -53626,120 +53603,6 @@ class ManifestRepo {
     }
 }
 exports.ManifestRepo = ManifestRepo;
-<<<<<<< HEAD
-=======
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ManifestRepo = void 0;
-const core = __importStar(__webpack_require__(470));
-const Git = __importStar(__webpack_require__(453));
-class ManifestRepo {
-    constructor(repo, branch) {
-        this.repo = repo;
-        this.branch = branch;
-    }
-    static createAsync(api, name, branch) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const nameParts = Git.Repository.splitRepoName(name);
-            const tapOwner = nameParts.owner;
-            const tapRepoName = nameParts.repoName;
-            const repo = yield Git.Repository.createAsync(api, tapOwner, tapRepoName);
-            const tapBranch = branch
-                ? yield repo.getBranchAsync(branch)
-                : repo.defaultBranch;
-            return new ManifestRepo(repo, tapBranch);
-        });
-    }
-    uploadManifestAsync(options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let commitRepo;
-            let commitBranch;
-            let createPull;
-            core.debug(`canPush=${this.repo.canPush}, isProtected=${this.branch.isProtected}, alwaysUsePullRequest=${options.alwaysUsePullRequest}`);
-            if (this.repo.canPush &&
-                (this.branch.isProtected || options.alwaysUsePullRequest)) {
-                core.debug('updating via PR in repo');
-                // Need to update via a PR in this repo
-                commitRepo = this.repo;
-                commitBranch = yield this.repo.createBranchAsync(`update-${Date.now().toString()}`, this.branch.sha);
-                createPull = true;
-            }
-            else if (this.repo.canPush &&
-                !this.branch.isProtected &&
-                !options.alwaysUsePullRequest) {
-                core.debug('updating via commit in repo');
-                // Commit directly to the branch in this repo
-                commitRepo = this.repo;
-                commitBranch = this.branch;
-                createPull = false;
-            }
-            else {
-                core.debug('updating via PR in fork repo');
-                // Need to update via PR from a fork
-                commitRepo = yield this.repo.createForkAsync(options.forkOwner);
-                commitBranch = yield commitRepo.createBranchAsync(`update-${Date.now().toString()}`, this.repo.defaultBranch.sha);
-                createPull = true;
-            }
-            // Create the commit
-            core.debug('creating commit...');
-            const commit = yield commitRepo.commitFileAsync(commitBranch.name, options.filePath, options.manifest, options.message);
-            if (!createPull) {
-                return commit;
-            }
-            core.debug('generating pull request message...');
-            let pullTitle;
-            let pullBody;
-            const msgParts = options.message.split('\n');
-            if (msgParts.length === 1) {
-                pullTitle = options.message;
-                pullBody = '';
-            }
-            else if (msgParts.length > 1) {
-                pullTitle = msgParts[0];
-                pullBody = msgParts.slice(1).join('\n');
-            }
-            else {
-                pullTitle = `Update ${options.filePath}`;
-                pullBody = '';
-            }
-            core.debug(`PR message is: ${pullTitle}\n${pullBody}`);
-            core.debug('creating pull request...');
-            return yield this.repo.createPullRequestAsync(this.branch.name, commitBranch.name, pullTitle, pullBody, commitRepo.owner);
-        });
-    }
-}
-exports.ManifestRepo = ManifestRepo;
->>>>>>> 2891a38 (Create/commit to new branch in forks)
-=======
->>>>>>> 2dec41f (Allow updates to existing winget manifests)
 
 
 /***/ }),
